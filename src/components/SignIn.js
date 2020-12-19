@@ -4,7 +4,6 @@ import {
 	Stack,
 	InputGroup,
 	InputLeftAddon,
-	FormHelperText,
 	Button,
 	FormControl,
 	Checkbox,
@@ -12,7 +11,7 @@ import {
 	FormErrorMessage,
 } from '@chakra-ui/react'
 import { Formik, Field, Form } from 'formik'
-import { FaUserAlt, FaLock, FaCheck } from 'react-icons/fa'
+import { FaUserAlt, FaLock } from 'react-icons/fa'
 import axios from 'axios'
 
 export default function SignIn() {

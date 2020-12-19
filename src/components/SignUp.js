@@ -7,7 +7,6 @@ import {
 	Button,
 	FormControl,
 	FormErrorMessage,
-	Alert,
 } from '@chakra-ui/react'
 import { Formik, Field, Form } from 'formik'
 import { FaUserAlt, FaLock, FaPhoneAlt } from 'react-icons/fa'

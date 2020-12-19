@@ -1,7 +1,6 @@
 import React from 'react'
 import { Box } from '@chakra-ui/react'
 import Form from './Form'
-import Card from './Card'
 
 function App() {
 	return (
