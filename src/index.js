@@ -11,10 +11,10 @@ const colors = {
 	},
 }
 
-const theme = extendTheme({ colors })
+const theme = extendTheme()
 
 ReactDOM.render(
-	<ChakraProvider theme={theme}>
+	<ChakraProvider>
 		<App />
 	</ChakraProvider>,
 	document.getElementById('root')

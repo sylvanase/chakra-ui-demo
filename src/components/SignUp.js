@@ -4,53 +4,117 @@ import {
 	Stack,
 	InputGroup,
 	InputLeftAddon,
-	InputRightAddon,
-	FormHelperText,
-	Radio,
-	RadioGroup,
-	Select,
-	Switch,
-	FormLabel,
-	Flex,
 	Button,
 	FormControl,
+	FormErrorMessage,
+	Alert,
 } from '@chakra-ui/react'
-import { FaUserAlt, FaLock, FaCheck } from 'react-icons/fa'
+import { Formik, Field, Form } from 'formik'
+import { FaUserAlt, FaLock, FaPhoneAlt } from 'react-icons/fa'
+import axios from 'axios'
 
 export default function SignUp() {
 	return (
-		<form>
-			<Stack spacing="2">
-				<FormControl isDisabled isInvalid>
-					<InputGroup>
-						<InputLeftAddon children={<FaUserAlt />} />
-						<Input placeholder="请输入用户名"></Input>
-					</InputGroup>
-					<FormHelperText>用户名是必填项</FormHelperText>
-				</FormControl>
-				<InputGroup>
-					<InputLeftAddon children={<FaLock />} />
-					<Input placeholder="请输入密码" type="password"></Input>
-					<InputRightAddon children={<FaCheck />} />
-				</InputGroup>
-				<RadioGroup defaultValue="0">
-					<Stack direction="horizontal" spacing="4">
-						<Radio value="0">男</Radio>
-						<Radio value="1">女</Radio>
+		<Formik
+			initialValues={{ email: '', password: '', username: '' }}
+			validate={(values) => {
+				const errors = {}
+				if (!values.username) {
+					errors.username = '请输入昵称'
+				} else if (!values.email) {
+					errors.email = '请输入手机号或邮箱'
+				} else if (!values.password) {
+					errors.password = '请输入密码'
+				}
+				return errors
+			}}
+			onSubmit={(values, actions) => {
+				axios({
+					method: 'post',
+					url: 'https://conduit.productionready.io/users',
+					data: {
+						user: {
+							...values,
+						},
+					},
+				})
+					.then((res) => {
+						console.log(res)
+						actions.setSubmitting(false)
+					})
+					.catch((error) => {
+						alert(error.message)
+						actions.setSubmitting(false)
+					})
+			}}
+		>
+			{(props) => (
+				<Form>
+					<Stack spacing="2">
+						<Field name="username">
+							{({ field, form }) => (
+								<FormControl
+									isInvalid={form.errors.username && form.touched.username}
+								>
+									<InputGroup>
+										<InputLeftAddon children={<FaUserAlt />} />
+										<Input
+											id="username"
+											{...field}
+											placeholder="你的昵称"
+										></Input>
+									</InputGroup>
+									<FormErrorMessage>{form.errors.username}</FormErrorMessage>
+								</FormControl>
+							)}
+						</Field>
+						<Field name="email">
+							{({ field, form }) => (
+								<FormControl
+									isInvalid={form.errors.email && form.touched.email}
+								>
+									<InputGroup>
+										<InputLeftAddon children={<FaPhoneAlt />} />
+										<Input
+											placeholder="邮箱"
+											type="email"
+											{...field}
+											id="email"
+										></Input>
+									</InputGroup>
+									<FormErrorMessage>{form.errors.email}</FormErrorMessage>
+								</FormControl>
+							)}
+						</Field>
+						<Field name="password">
+							{({ field, form }) => (
+								<FormControl
+									isInvalid={form.errors.password && form.touched.password}
+								>
+									<InputGroup>
+										<InputLeftAddon children={<FaLock />} />
+										<Input
+											placeholder="设置密码"
+											type="password"
+											{...field}
+											id="password"
+										></Input>
+									</InputGroup>
+									<FormErrorMessage>{form.errors.password}</FormErrorMessage>
+								</FormControl>
+							)}
+						</Field>
+						<Button
+							mt={4}
+							colorScheme="teal"
+							isLoading={props.isSubmitting}
+							type="submit"
+						>
+							注册
+						</Button>
 					</Stack>
-				</RadioGroup>
-				<Select placeholder="请选择学科">
-					<option value="js">JavaScript</option>
-					<option value="java">Java</option>
-				</Select>
-				<Flex>
-					<Switch id="deal" mr="3" />
-					<FormLabel htmlFor="deal">是否同意协议</FormLabel>
-				</Flex>
-				<Button _hover={{ bgColor: 'tomato' }} w="100%" colorScheme="teal">
-					注册
-				</Button>
-			</Stack>
-		</form>
+				</Form>
+			)}
+		</Formik>
 	)
 }
